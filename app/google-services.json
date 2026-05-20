@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "825163248114",
+    "project_id": "pitica-a639a",
+    "storage_bucket": "pitica-a639a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:825163248114:android:1b4ccdfa0dc90d221ebb6b",
+        "android_client_info": {
+          "package_name": "com.example.pitica"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBA1V088uwk8gxbaqnUsW9FpDaMQshEk3A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
