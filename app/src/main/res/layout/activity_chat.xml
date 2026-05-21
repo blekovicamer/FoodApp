@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0c0c0c">
+
+    <TextView
+        android:id="@+id/tvChatTitle"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"  android:paddingTop="30dp"     android:paddingStart="20dp"
+        android:gravity="center_vertical"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        android:background="#1A1A1A"
+        android:textStyle="bold" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvMessages"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/tvChatTitle"
+        android:layout_above="@+id/layoutInput"
+        android:padding="10dp" />
+
+    <LinearLayout
+        android:id="@+id/layoutInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#1A1A1A"
+        android:padding="10dp"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/etMessage"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:hint="Type a message..."
+            android:textColor="#FFFFFF"
+            android:textColorHint="#888888"
+            android:paddingStart="15dp"
+            android:background="@android:color/transparent" />
+
+        <Button
+            android:id="@+id/btnSend"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:text="Send"
+            android:backgroundTint="#FF7300"
+            android:textColor="#FFFFFF" />
+    </LinearLayout>
+
+</RelativeLayout>

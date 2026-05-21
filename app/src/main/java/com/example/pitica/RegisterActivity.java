@@ -3,7 +3,6 @@ package com.example.pitica;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -14,6 +13,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.firestore.FirebaseFirestore; // 1. Added Import
+
+import java.util.HashMap; // 2. Added Import
+import java.util.Map;     // 3. Added Import
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -21,14 +24,15 @@ public class RegisterActivity extends AppCompatActivity {
     private Button btnRegister;
     private TextView tvGoToLogin;
     private FirebaseAuth mAuth;
+    private FirebaseFirestore db; // 4. Added Firestore instance
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance(); // 5. Initialize Firestore
 
         etNameRegister = findViewById(R.id.etNameRegister);
         etEmailRegister = findViewById(R.id.etEmailRegister);
@@ -36,20 +40,9 @@ public class RegisterActivity extends AppCompatActivity {
         btnRegister = findViewById(R.id.btnRegister);
         tvGoToLogin = findViewById(R.id.tvGoToLogin);
 
-        btnRegister.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                registerNewUser();
-            }
-        });
+        btnRegister.setOnClickListener(v -> registerNewUser());
 
-        tvGoToLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Go back to the login screen
-                finish();
-            }
-        });
+        tvGoToLogin.setOnClickListener(v -> finish());
     }
 
     private void registerNewUser() {
@@ -57,40 +50,36 @@ public class RegisterActivity extends AppCompatActivity {
         String email = etEmailRegister.getText().toString().trim();
         String password = etPasswordRegister.getText().toString().trim();
 
-        if (TextUtils.isEmpty(name)) {
-            etNameRegister.setError("Name is required.");
-            return;
-        }
-        if (TextUtils.isEmpty(email)) {
-            etEmailRegister.setError("Email is required.");
-            return;
-        }
-        if (TextUtils.isEmpty(password)) {
-            etPasswordRegister.setError("Password is required.");
-            return;
-        }
-        if (password.length() < 6) {
-            etPasswordRegister.setError("Password must be at least 6 characters.");
+        if (TextUtils.isEmpty(name) || TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
+            Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Firebase registration function
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        // Save the user's name to their Firebase profile
                         FirebaseUser user = mAuth.getCurrentUser();
-                        if (user != null) {
-                            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                                    .setDisplayName(name)
-                                    .build();
-                            user.updateProfile(profileUpdates);
-                        }
 
-                        Toast.makeText(RegisterActivity.this, "Registration Successful!", Toast.LENGTH_SHORT).show();
+                        // 6. Update Auth Profile
+                        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                .setDisplayName(name)
+                                .build();
+                        user.updateProfile(profileUpdates);
 
-                        // Go back to login screen after successful registration
-                        finish();
+                        // 7. Save to Firestore (This makes them searchable!)
+                        Map<String, Object> userMap = new HashMap<>();
+                        userMap.put("nickname", name);
+                        userMap.put("email", email);
+                        userMap.put("uid", user.getUid());
+
+                        db.collection("users").document(user.getUid())
+                                .set(userMap)
+                                .addOnSuccessListener(aVoid -> {
+                                    Toast.makeText(RegisterActivity.this, "Registration Successful!", Toast.LENGTH_SHORT).show();
+                                    finish();
+                                })
+                                .addOnFailureListener(e -> Toast.makeText(RegisterActivity.this, "Error saving profile: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+
                     } else {
                         Toast.makeText(RegisterActivity.this, "Error: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                     }

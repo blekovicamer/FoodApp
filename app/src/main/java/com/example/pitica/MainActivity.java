@@ -41,12 +41,8 @@ public class MainActivity extends AppCompatActivity {
         // 4. Navigation Click Listeners
         Button btnNavHome = findViewById(R.id.btnNavHome);
         Button btnNavCart = findViewById(R.id.btnNavCart);
-        Button btnNavMap = findViewById(R.id.btnNavMap);
         Button btnNavProfile = findViewById(R.id.btnNavProfile);
-
-        btnNavMap.setOnClickListener(v -> {
-            startActivity(new Intent(MainActivity.this, MapActivity.class));
-        });
+        Button btnNavChat = findViewById(R.id.btnNavChat);
 
         btnNavCart.setOnClickListener(v -> {
             startActivity(new Intent(MainActivity.this, CartActivity.class));
@@ -54,6 +50,10 @@ public class MainActivity extends AppCompatActivity {
 
         btnNavProfile.setOnClickListener(v -> {
             startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+        });
+
+        btnNavChat.setOnClickListener(v -> {
+            startActivity(new Intent(this, ConversationsActivity.class));
         });
     }
 

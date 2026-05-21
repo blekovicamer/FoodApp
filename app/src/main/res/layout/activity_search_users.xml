@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingTop="30dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:background="#0F0F0F">
+
+    <EditText
+        android:id="@+id/etSearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Search by nickname..."
+        android:textColor="#FFFFFF"
+        android:textColorHint="#888888"
+        android:backgroundTint="#FF7300" />
+
+    <Button
+        android:id="@+id/btnSearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Search"
+        android:backgroundTint="#FF7300"
+        android:layout_marginTop="10dp"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvUserResults"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="20dp" />
+
+</LinearLayout>
