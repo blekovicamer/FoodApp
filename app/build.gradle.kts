@@ -50,4 +50,7 @@ dependencies {
     // Firebase Dependencies
     implementation(platform("com.google.firebase:firebase-bom:32.8.0"))
     implementation("com.google.firebase:firebase-auth")
+
+    // ADD THIS LINE:
+    implementation("com.google.firebase:firebase-storage")
 }

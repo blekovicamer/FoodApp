@@ -1,13 +1,16 @@
 package com.example.pitica;
 
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView; // Added
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import java.io.File;
 import java.util.List;
 
 public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder> {
@@ -31,13 +34,25 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
     @Override
     public void onBindViewHolder(@NonNull FoodViewHolder holder, int position) {
         FoodItem item = foodList.get(position);
-        holder.tvTitle.setText(item.getTitle());
-        holder.tvChefDistance.setText("By " + item.getChefName() + " • " + item.getDistance());
+
+        holder.tvFoodName.setText(item.getTitle());
+        holder.tvChefInfo.setText("By " + item.getChefName() + " • " + item.getDistance());
         holder.tvPrice.setText(item.getPrice());
 
-        holder.itemView.setOnClickListener(v -> { if (listener != null) listener.onItemClick(item); });
+        // LOAD LOCAL IMAGE
+        String path = item.getImagePath();
+        if (path != null && !path.isEmpty()) {
+            File imgFile = new File(path);
+            if (imgFile.exists()) {
+                holder.ivFoodImage.setImageURI(Uri.fromFile(imgFile));
+            }
+        }
 
-        holder.btnAddToCart.setOnClickListener(v -> {
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) listener.onItemClick(item);
+        });
+
+        holder.btnAdd.setOnClickListener(v -> {
             CartManager.getInstance().addItem(item);
             Toast.makeText(v.getContext(), item.getTitle() + " added to cart!", Toast.LENGTH_SHORT).show();
         });
@@ -47,14 +62,20 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
     public int getItemCount() { return foodList.size(); }
 
     public static class FoodViewHolder extends RecyclerView.ViewHolder {
-        TextView tvTitle, tvChefDistance, tvPrice;
-        Button btnAddToCart;
+        TextView tvFoodName, tvChefInfo, tvPrice;
+        Button btnAdd;
+        ImageView ivFoodImage;
+
         public FoodViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvTitle = itemView.findViewById(R.id.tvFoodTitle);
-            tvChefDistance = itemView.findViewById(R.id.tvChefDistance);
-            tvPrice = itemView.findViewById(R.id.tvFoodPrice);
-            btnAddToCart = itemView.findViewById(R.id.btnAddToCart);
+            tvFoodName = itemView.findViewById(R.id.tvFoodName);
+            tvChefInfo = itemView.findViewById(R.id.tvChefInfo);
+            tvPrice = itemView.findViewById(R.id.tvPrice);
+            btnAdd = itemView.findViewById(R.id.btnAdd);
+
+            // --- FIX THIS LINE HERE ---
+            // Change ivFoodImage to match your XML ID
+            ivFoodImage = itemView.findViewById(R.id.imgFood);
         }
     }
 }
